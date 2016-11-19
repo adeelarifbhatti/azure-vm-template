@@ -25,10 +25,10 @@
 	"machineName":	{
 		"type": "string"
 	},
-	"OsDisk": {
+	"osDiskName": {
 		"type": "string"
 	},
-	"DataDisk": {
+	"dataDiskName": {
 		"type": "string"
 	},
 	"dnsName" : {
