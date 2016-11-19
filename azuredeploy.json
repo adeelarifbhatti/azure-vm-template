@@ -43,10 +43,8 @@
 "subnetName" : "oursubnet",
 "subNicName" : "ourClient",
 "StorageAccountType" : "Standard_LRS",
-
-
 "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('ourVNetwork'))]", 
-"subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetNameq'))]",
+"subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
 }
 
 "resources" : [
@@ -79,11 +77,30 @@
 	"properties" : 
 		{ "addressSpace" : 
 			{ "addressPrefixes":"[parameters( 'networkaddressPrefix' )]"
-			},"subnets": [ 
-				{ "name" : "[variables( 'subnetName' )]", 
+			},"subnets": 
+				[{ "name" : "[variables( 'subnetName' )]", 
 				"properties" : 
-					{ "addressPrefix" : "[parameters( 'subnetaddressPrefix' )]" 
+					{ "addressPrefix" : "[variables( 'subnetaddressPrefix' )]" 
 					} 
-				}
-
+				}]
+		}
+},
+{
+	"apiVersion" : "2016-03-30",
+	"type" : "Microsoft.Network/networkInterfaces",
+	"name" : "[variable( 'networkNic' )]",
+	"location" : "[resourceGroup().location]",
+	"dependsOn" : ["[concat('Microsoft.Network/publicIPAddresses/', variable( 'publicIPAddressName' ))]"
+		,"[concat('Microsoft.Network/virtualNetworks/', variable( 'vNetworkName' ))]"],
+	"properties" : 
+		{ "ipConfigurations" : [{"name" : "ipconfig1", 
+			"properties" : 
+				{ "privateIPAllocationMethod" : "[variable( 'privateIPAllocation ')]"
+				  ,"publicIPAddress" : 
+				  	{
+				  	 	"id" : "[resourceId('Microsoft.Network/publicIPAddress'
+				  		,variable( 'publicIPAddressName' ))]" 
+					}
+		,"subnet" : {"Id" : "[variables ('subnetRef')]"  
+		}
 },
