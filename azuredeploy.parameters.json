@@ -1,0 +1,39 @@
+{
+"$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+"contentVersion": "1.0.0.0", 
+
+"parameter" : 
+{
+	"storageAccountName" : 
+		{"value" : "newcompany"},
+
+	"adminUserName" : 
+		{"value" : "manager"},
+
+	"adminPassword" : 
+		{"value" : "testing"},
+
+	"machineSize" :
+		{"value" : "ExtraSmall"},
+
+	"ubuntuOSVersion" :
+		{"value" : "16.04.0-LTS"},
+
+	"machineName" :
+		{"value" : "imageshop"},
+
+	"osDiskName" :
+		{"value" : "ubuntuos"},
+
+	"osDiskContainer" :
+		{"value" : "oscontainer"},
+
+	"dataDiskContainer" :
+		{"value" : "datacontaier"},
+
+	"dataDiskName" :
+		{"value" : "datacontainer"},
+
+}
+}
+

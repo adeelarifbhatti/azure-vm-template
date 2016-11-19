@@ -4,7 +4,7 @@
 "contentVersion": "1.0.0.0", 
 
 "parameter" : {
-	"StorageAccountName": {
+	"storageAccountName": {
 		"type": "string"
 	},
 	"adminUsername": {
@@ -16,9 +16,7 @@
 	"adminPassword": {
 		"type": "securestring"
 	},
-	"dnsNameForPublicIP": {
-		"type": "string"
-	},
+	
 	"ubuntuOSVersion": {
 		"type": "string",
 		"defaultValue": "16.04.0-LTS"
@@ -61,7 +59,7 @@
 "resources" : [
 {
 	"type" : "Microsoft.Storage/storageAccounts",
-	"name" : "[parameters('StorageAccountName')]",
+	"name" : "[parameters('storageAccountName')]",
 	"apiVersion" : "2015-06-15",
 	"location" : "[resourceGroup().location]",
 	"properties" :
@@ -123,7 +121,7 @@
 	"location" : "[resourceGroup().location]",
 	"dependsOn" :
 		["[concat('Microsoft.Network/networkInterfaces/',variables('networkNic'))]"
-		,"[concat('Microsoft.Storage/storageAccounts/',parameters('StorageAccountName'))]"
+		,"[concat('Microsoft.Storage/storageAccounts/',parameters('storageAccountName'))]"
 		]
 	,"properties" :
 		{	"hardwareProfile" : {"vmSize" : "[parameters('machineSize')]"},
@@ -142,7 +140,7 @@
 			 	 "osDisk" :
 			 	 	{"name" : "[parameters('osDiskName')]"
 			 	 	 ,"vhd" : 
-			 	 	 	{"uri" :"[concat('https://',parameters('StorageAccountName'),'.blob.core.windows.net/',parameters('osDiskContainer'),'/',parameters('osDiskName'),'.vhd']"
+			 	 	 	{"uri" :"[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('osDiskContainer'),'/',parameters('osDiskName'),'.vhd']"
 			 	 	 	},
 			 	 	 "caching" : "readWrite",
 			 	 	 "createOption" :"FromImage"
@@ -152,7 +150,7 @@
 			 	 	 ,"diskSizeGB" : "[variables('dataDiskSize')]"
 			 	 	 ,"lun" : "3"
 			 	 	 ,"vhd" :
-			 	 	 	{"uri" : "[concat('https://',parameters('StorageAccountName'),'.blob.core.windows.net/',parameters('dataDiskContainer'),'/',parameters('dataDiskName'),'.vhd')]"
+			 	 	 	{"uri" : "[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('dataDiskContainer'),'/',parameters('dataDiskName'),'.vhd')]"
 			 	 	 	},
 			 	 	 	"createOption" : "Empty"
 			 	 	}
