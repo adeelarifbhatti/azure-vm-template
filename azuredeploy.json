@@ -9,6 +9,9 @@
 	"adminUsername": {
 		"type": "string"
 	},
+	"machineSize" : {
+		"type" : "string"
+	},
 	"adminPassword": {
 		"type": "securestring"
 	},
@@ -18,6 +21,9 @@
 	"ubuntuOSVersion": {
 		"type": "string",
 		"defaultValue": "16.04.0-LTS"
+	},
+	"machineName":	{
+		"type": "string"
 	},
 	"OsDisk": {
 		"type": "string"
@@ -32,7 +38,6 @@
 "variables" : {
 "imagepublisher" : "Canonical",
 "imageoffer" : "UbuntuServer",
-"extensionName" : "OurClient",
 "publicIPAddressName" : "myPublicIP",
 "publicIPAllocation" : "Dynamic",
 "privateIPAllocation" : "Dynamic",
@@ -41,7 +46,6 @@
 "subnetaddressPrefix" : "10.0.0.0/24",
 "networkNic" : "nic1",
 "subnetName" : "oursubnet",
-"subNicName" : "ourClient",
 "StorageAccountType" : "Standard_LRS",
 "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('ourVNetwork'))]", 
 "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
@@ -101,6 +105,39 @@
 				  	 	"id" : "[resourceId('Microsoft.Network/publicIPAddress'
 				  		,variable( 'publicIPAddressName' ))]" 
 					}
+				}
 		,"subnet" : {"Id" : "[variables ('subnetRef')]"  
 		}
+},
+{
+	"apiVersion" : "2016-03-30",
+	"type" : "Microsoft.Compute/virtualMachines",
+	"name" : "[parameters( 'machineName' )]",
+	"location" : "[resourceGroup().location]",
+	"dependsOn" :
+		["[concat('Microsoft.Network/networkInterfaces/',variables( 'networkNic' ))]"
+		,"[concat('Microsoft.Storage/storageAccounts/',parameters( 'StorageAccountName' ))]"
+		]
+	,"properties" :
+		{	"hardwareProfile" : {"vmSize" : "[parameters('machineSize')]"},
+			"osProfile" : {
+				"computerName" : "[parameters( 'machineName' )]"
+				,"adminUsername" : "[parameters( 'adminUsername' )]"
+				,"adminPassword" : "[parameters( 'adminPassword' )]"
+			},
+			"storageProfile" :
+			 	{"imageReference" :
+			 		{ "publisher" : "[variables ( 'imagepublisher' )]",
+			 		  "offer" : "[variables( 'imageoffer' )]",
+			 		  "sku" :"[ parameters( 'ubuntuOSVersion' )]",
+			 		  "version" : "latest",	
+			 		}
+
+			 }
+
+		}
+
+
+
+
 },
