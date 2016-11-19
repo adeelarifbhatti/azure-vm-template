@@ -53,6 +53,7 @@
 "networkNic" : "nic1",
 "subnetName" : "oursubnet",
 "StorageAccountType" : "Standard_LRS",
+"dataDiskSize" : "2",
 "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('ourVNetwork'))]", 
 "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
 }
@@ -60,7 +61,7 @@
 "resources" : [
 {
 	"type" : "Microsoft.Storage/storageAccounts",
-	"name" : "[parameters ('StorageAccountName') ]",
+	"name" : "[parameters('StorageAccountName')]",
 	"apiVersion" : "2015-06-15",
 	"location" : "[resourceGroup().location]",
 	"properties" :
@@ -112,7 +113,7 @@
 				  		,variable('publicIPAddressName'))]" 
 					}
 				}
-		,"subnet" : {"Id" : "[variables ('subnetRef')]"  
+		,"subnet" : {"Id" : "[variables('subnetRef')]"  
 		}
 },
 {
@@ -133,7 +134,7 @@
 			},
 			"storageProfile" :
 			 	{"imageReference" :
-			 		{ "publisher" : "[variables ('imagepublisher')]"
+			 		{ "publisher" : "[variables('imagepublisher')]"
 			 		  ,"offer" : "[variables('imageoffer')]"
 			 		  ,"sku" :"[ parameters('ubuntuOSVersion')]"
 			 		  ,"version" : "latest",	
@@ -145,6 +146,15 @@
 			 	 	 	},
 			 	 	 "caching" : "readWrite",
 			 	 	 "createOption" :"FromImage"
+			 	 	},
+			 	 "dataDisk" :
+			 	 	{"name" : "[parameters('dataDiskName')]"
+			 	 	 ,"diskSizeGB" : "[variables('dataDiskSize')]"
+			 	 	 ,"lun" : "3"
+			 	 	 ,"vhd" :
+			 	 	 	{"uri" : "[concat('https://',parameters('StorageAccountName'),'.blob.core.windows.net/',parameters('dataDiskContainer'),'/',parameters('dataDiskName'),'.vhd')]"
+			 	 	 	},
+			 	 	 	"createOption" : "Empty"
 			 	 	}
 			 	 },
 	 	
