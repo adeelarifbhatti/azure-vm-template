@@ -1,4 +1,5 @@
 
+{
 "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
 "contentVersion": "1.0.0.0", 
 
@@ -56,8 +57,7 @@
 "dataDiskSize" : "2",
 "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('ourVNetwork'))]", 
 "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
-}
-
+},
 "resources" : [
 {
 	"type" : "Microsoft.Storage/storageAccounts",
@@ -157,6 +157,12 @@
 			 	 	 	"createOption" : "Empty"
 			 	 	}
 			 	 },
+			"networkProfile" : {
+				"networkinterfaces" : 
+				[{
+					"id" : "[resourceId('Microsoft.Network/networkInterfaces', variable('networkNic'))]"
+				}]
+			}
 	 	
 
 		}
@@ -164,4 +170,4 @@
 
 
 
-},
+}
