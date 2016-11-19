@@ -3,7 +3,7 @@
 "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
 "contentVersion": "1.0.0.0", 
 
-"parameter" : {
+"parameters" : {
 	"storageAccountName": {
 		"type": "string"
 	},
@@ -53,7 +53,7 @@
 "subnetName" : "oursubnet",
 "StorageAccountType" : "Standard_LRS",
 "dataDiskSize" : "2",
-"vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('ourVNetwork'))]", 
+"vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variabless('ourVNetwork'))]", 
 "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
 },
 "resources" : [
@@ -81,7 +81,7 @@
 {
 	"apiVersion" : "2016-03-30",
 	"type" : "Microsoft.Network/virtualNetworks",
-	"name" : "[ variable('vNetworkName ')]",
+	"name" : "[ variables('vNetworkName')]",
 	"location" : "[resourceGroup().location]",
 	"properties" : 
 		{ "addressSpace" : 
@@ -100,18 +100,22 @@
 	"name" : "[variable('networkNic')]",
 	"location" : "[resourceGroup().location]",
 	"dependsOn" : ["[concat('Microsoft.Network/publicIPAddresses/', variable('publicIPAddressName'))]"
-		,"[concat('Microsoft.Network/virtualNetworks/', variable('vNetworkName'))]"],
+		,"[concat('Microsoft.Network/virtualNetworks/', variables('vNetworkName'))]"],
 	"properties" : 
-		{ "ipConfigurations" : [{"name" : "ipconfig1", 
-			"properties" : 
-				{ "privateIPAllocationMethod" : "[variable('privateIPAllocation ')]"
-				  ,"publicIPAddress" : 
-				  	{
-				  	 	"id" : "[resourceId('Microsoft.Network/publicIPAddress'
-				  		,variable('publicIPAddressName'))]" 
+		{ "ipConfigurations" : 
+			[{"name" : "ipconfig1", 
+				"properties" : 
+					{ "privateIPAllocationMethod" : "[variable('privateIPAllocation')]"
+				  	  ,"publicIPAddress" : 
+				  		{"id" : "[resourceId('Microsoft.Network/publicIPAddress'
+				  		 ,variable('publicIPAddressName'))]" 
+						}
+					 
+					 ,"subnet" : 
+					 	{"Id" : "[variables('subnetRef')]" 
+					 	} 
 					}
-				}
-		,"subnet" : {"Id" : "[variables('subnetRef')]"  
+			}]
 		}
 },
 {
@@ -164,6 +168,8 @@
 	 	
 
 		}
+}
+]
 
 
 
