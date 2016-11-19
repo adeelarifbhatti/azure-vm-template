@@ -28,6 +28,12 @@
 	"osDiskName": {
 		"type": "string"
 	},
+	"osDiskContainer": {
+		"type": "string"
+	},
+	"dataDiskContainer": {
+		"type": "string"
+	},
 	"dataDiskName": {
 		"type": "string"
 	},
@@ -54,37 +60,37 @@
 "resources" : [
 {
 	"type" : "Microsoft.Storage/storageAccounts",
-	"name" : "[parameters ( 'StorageAccountName' ) ]",
+	"name" : "[parameters ('StorageAccountName') ]",
 	"apiVersion" : "2015-06-15",
 	"location" : "[resourceGroup().location]",
 	"properties" :
-		{ "accountType" : "[variable( 'StorageAccountType' )]"
+		{ "accountType" : "[variable('StorageAccountType')]"
 		 },
 },
 {
 	"apiVersion" : "2016-03-30",
 	"type" : "Microsoft.Network/publicIPAddresses",
-	"name" : "[variables( 'publicIPAddressName' )]",
+	"name" : "[variables('publicIPAddressName')]",
 	"location" : "[resourceGroup().location]",
 	"properties" : 
-		{ "publicIPAllocationMethod" : "[variables( 'publicIPAllocation' )]",
+		{ "publicIPAllocationMethod" : "[variables('publicIPAllocation')]",
 		  "dnsSettings" : 
-		  	{	"domainNamelabel" : "[parameters( 'dnsName' )]"
+		  	{	"domainNamelabel" : "[parameters('dnsName')]"
 		   	 }
 		}
 },
 {
 	"apiVersion" : "2016-03-30",
 	"type" : "Microsoft.Network/virtualNetworks",
-	"name" : "[ variable( 'vNetworkName ' )]",
+	"name" : "[ variable('vNetworkName ')]",
 	"location" : "[resourceGroup().location]",
 	"properties" : 
 		{ "addressSpace" : 
-			{ "addressPrefixes":"[parameters( 'networkaddressPrefix' )]"
+			{ "addressPrefixes":"[parameters('networkaddressPrefix')]"
 			},"subnets": 
-				[{ "name" : "[variables( 'subnetName' )]", 
+				[{ "name" : "[variables('subnetName')]", 
 				"properties" : 
-					{ "addressPrefix" : "[variables( 'subnetaddressPrefix' )]" 
+					{ "addressPrefix" : "[variables('subnetaddressPrefix')]" 
 					} 
 				}]
 		}
@@ -92,18 +98,18 @@
 {
 	"apiVersion" : "2016-03-30",
 	"type" : "Microsoft.Network/networkInterfaces",
-	"name" : "[variable( 'networkNic' )]",
+	"name" : "[variable('networkNic')]",
 	"location" : "[resourceGroup().location]",
-	"dependsOn" : ["[concat('Microsoft.Network/publicIPAddresses/', variable( 'publicIPAddressName' ))]"
-		,"[concat('Microsoft.Network/virtualNetworks/', variable( 'vNetworkName' ))]"],
+	"dependsOn" : ["[concat('Microsoft.Network/publicIPAddresses/', variable('publicIPAddressName'))]"
+		,"[concat('Microsoft.Network/virtualNetworks/', variable('vNetworkName'))]"],
 	"properties" : 
 		{ "ipConfigurations" : [{"name" : "ipconfig1", 
 			"properties" : 
-				{ "privateIPAllocationMethod" : "[variable( 'privateIPAllocation ')]"
+				{ "privateIPAllocationMethod" : "[variable('privateIPAllocation ')]"
 				  ,"publicIPAddress" : 
 				  	{
 				  	 	"id" : "[resourceId('Microsoft.Network/publicIPAddress'
-				  		,variable( 'publicIPAddressName' ))]" 
+				  		,variable('publicIPAddressName'))]" 
 					}
 				}
 		,"subnet" : {"Id" : "[variables ('subnetRef')]"  
@@ -112,28 +118,36 @@
 {
 	"apiVersion" : "2016-03-30",
 	"type" : "Microsoft.Compute/virtualMachines",
-	"name" : "[parameters( 'machineName' )]",
+	"name" : "[parameters('machineName')]",
 	"location" : "[resourceGroup().location]",
 	"dependsOn" :
-		["[concat('Microsoft.Network/networkInterfaces/',variables( 'networkNic' ))]"
-		,"[concat('Microsoft.Storage/storageAccounts/',parameters( 'StorageAccountName' ))]"
+		["[concat('Microsoft.Network/networkInterfaces/',variables('networkNic'))]"
+		,"[concat('Microsoft.Storage/storageAccounts/',parameters('StorageAccountName'))]"
 		]
 	,"properties" :
 		{	"hardwareProfile" : {"vmSize" : "[parameters('machineSize')]"},
 			"osProfile" : {
-				"computerName" : "[parameters( 'machineName' )]"
-				,"adminUsername" : "[parameters( 'adminUsername' )]"
-				,"adminPassword" : "[parameters( 'adminPassword' )]"
+				"computerName" : "[parameters('machineName')]"
+				,"adminUsername" : "[parameters('adminUsername')]"
+				,"adminPassword" : "[parameters('adminPassword')]"
 			},
 			"storageProfile" :
 			 	{"imageReference" :
-			 		{ "publisher" : "[variables ( 'imagepublisher' )]",
-			 		  "offer" : "[variables( 'imageoffer' )]",
-			 		  "sku" :"[ parameters( 'ubuntuOSVersion' )]",
-			 		  "version" : "latest",	
-			 		}
-
-			 }
+			 		{ "publisher" : "[variables ('imagepublisher')]"
+			 		  ,"offer" : "[variables('imageoffer')]"
+			 		  ,"sku" :"[ parameters('ubuntuOSVersion')]"
+			 		  ,"version" : "latest",	
+			 		},
+			 	 "osDisk" :
+			 	 	{"name" : "[parameters('osDiskName')]"
+			 	 	 ,"vhd" : 
+			 	 	 	{"uri" :"[concat('https://',parameters('StorageAccountName'),'.blob.core.windows.net/',parameters('osDiskContainer'),'/',parameters('osDiskName'),'.vhd']"
+			 	 	 	},
+			 	 	 "caching" : "readWrite",
+			 	 	 "createOption" :"FromImage"
+			 	 	}
+			 	 },
+	 	
 
 		}
 
