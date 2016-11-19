@@ -1,0 +1,89 @@
+
+"$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+"contentVersion": "1.0.0.0", 
+
+"parameter" : {
+	"StorageAccountName": {
+		"type": "string"
+	},
+	"adminUsername": {
+		"type": "string"
+	},
+	"adminPassword": {
+		"type": "securestring"
+	},
+	"dnsNameForPublicIP": {
+		"type": "string"
+	},
+	"ubuntuOSVersion": {
+		"type": "string",
+		"defaultValue": "16.04.0-LTS"
+	},
+	"OsDisk": {
+		"type": "string"
+	},
+	"DataDisk": {
+		"type": "string"
+	},
+	"dnsName" : {
+		"type": "string"
+	},
+},
+"variables" : {
+"imagepublisher" : "Canonical",
+"imageoffer" : "UbuntuServer",
+"extensionName" : "OurClient",
+"publicIPAddressName" : "myPublicIP",
+"publicIPAllocation" : "Dynamic",
+"privateIPAllocation" : "Dynamic",
+"vNetworkName" : "ourVNetwork",
+"networkaddressPrefix" : "10.0.0.0/16",
+"subnetaddressPrefix" : "10.0.0.0/24",
+"networkNic" : "nic1",
+"subnetName" : "oursubnet",
+"subNicName" : "ourClient",
+"StorageAccountType" : "Standard_LRS",
+
+
+"vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('ourVNetwork'))]", 
+"subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetNameq'))]",
+}
+
+"resources" : [
+{
+	"type" : "Microsoft.Storage/storageAccounts",
+	"name" : "[parameters ( 'StorageAccountName' ) ]",
+	"apiVersion" : "2015-06-15",
+	"location" : "[resourceGroup().location]",
+	"properties" :
+		{ "accountType" : "[variable( 'StorageAccountType' )]"
+		 },
+},
+{
+	"apiVersion" : "2016-03-30",
+	"type" : "Microsoft.Network/publicIPAddresses",
+	"name" : "[variables( 'publicIPAddressName' )]",
+	"location" : "[resourceGroup().location]",
+	"properties" : 
+		{ "publicIPAllocationMethod" : "[variables( 'publicIPAllocation' )]",
+		  "dnsSettings" : 
+		  	{	"domainNamelabel" : "[parameters( 'dnsName' )]"
+		   	 }
+		}
+},
+{
+	"apiVersion" : "2016-03-30",
+	"type" : "Microsoft.Network/virtualNetworks",
+	"name" : "[ variable( 'vNetworkName ' )]",
+	"location" : "[resourceGroup().location]",
+	"properties" : 
+		{ "addressSpace" : 
+			{ "addressPrefixes":"[parameters( 'networkaddressPrefix' )]"
+			},"subnets": [ 
+				{ "name" : "[variables( 'subnetName' )]", 
+				"properties" : 
+					{ "addressPrefix" : "[parameters( 'subnetaddressPrefix' )]" 
+					} 
+				}
+
+},
