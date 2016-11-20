@@ -152,15 +152,15 @@
 			 	 	 "caching" : "readWrite",
 			 	 	 "createOption" :"FromImage"
 			 	 	},
-			 	 "dataDisk" :
-			 	 	{"name" : "[parameters('dataDiskName')]"
+			 	 "dataDisks" :
+			 	 	[{"name" : "[parameters('dataDiskName')]"
 			 	 	 ,"diskSizeGB" : "[variables('dataDiskSize')]"
-			 	 	 ,"lun" : "3"
+			 	 	 ,"lun" : "0"
 			 	 	 ,"vhd" :
 			 	 	 	{"uri" : "[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('dataDiskContainer'),'/',parameters('dataDiskName'),'.vhd')]"
 			 	 	 	},
 			 	 	 	"createOption" : "Empty"
-			 	 	}
+			 	 	}]
 			 	 },
 			"networkProfile" : {
 				"networkinterfaces" : 
@@ -173,8 +173,4 @@
 		}
 }
 ]
-
-
-
-
 }

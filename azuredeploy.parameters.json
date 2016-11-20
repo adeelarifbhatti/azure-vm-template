@@ -5,16 +5,16 @@
 "parameters" : 
 {
 	"storageAccountName" : 
-		{"value" : "newcompany"},
+		{"value" : "newcompany4re"},
 
 	"adminUserName" : 
 		{"value" : "manager"},
 
 	"adminPassword" : 
-		{"value" : "testing"},
+		{"value" : "testing###12"},
 
 	"machineSize" :
-		{"value" : "ExtraSmall"},
+		{"value" : "Standard_A0"},
 
 	"ubuntuOSVersion" :
 		{"value" : "16.04.0-LTS"},
