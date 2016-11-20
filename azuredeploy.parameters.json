@@ -34,6 +34,9 @@
 	"dataDiskName" :
 		{"value" : "datacontainer"},
 
+	"dnsName" :
+		{"value" : "nordcloudtest"},
+
 }
 }
 

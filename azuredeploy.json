@@ -53,7 +53,7 @@
 "subnetName" : "oursubnet",
 "StorageAccountType" : "Standard_LRS",
 "dataDiskSize" : "2",
-"vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variabless('ourVNetwork'))]", 
+"vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('ourVNetwork'))]", 
 "subnetRef": "[concat(variables('vnetID'),'/subnets/',variables('subnetName'))]",
 },
 "resources" : [
@@ -85,7 +85,10 @@
 	"location" : "[resourceGroup().location]",
 	"properties" : 
 		{ "addressSpace" : 
-			{ "addressPrefixes":"[parameters('networkaddressPrefix')]"
+			{ "addressPrefixes":
+			[
+				"[variables('networkaddressPrefix')]"
+			]
 			},"subnets": 
 				[{ "name" : "[variables('subnetName')]", 
 				"properties" : 
@@ -99,7 +102,7 @@
 	"type" : "Microsoft.Network/networkInterfaces",
 	"name" : "[variable('networkNic')]",
 	"location" : "[resourceGroup().location]",
-	"dependsOn" : ["[concat('Microsoft.Network/publicIPAddresses/', variable('publicIPAddressName'))]"
+	"dependsOn" : ["[concat('Microsoft.Network/publicIPAddresses/', variables('publicIPAddressName'))]"
 		,"[concat('Microsoft.Network/virtualNetworks/', variables('vNetworkName'))]"],
 	"properties" : 
 		{ "ipConfigurations" : 
@@ -107,8 +110,8 @@
 				"properties" : 
 					{ "privateIPAllocationMethod" : "[variable('privateIPAllocation')]"
 				  	  ,"publicIPAddress" : 
-				  		{"id" : "[resourceId('Microsoft.Network/publicIPAddress'
-				  		 ,variable('publicIPAddressName'))]" 
+				  		{"id" : "[resourceId('Microsoft.Network/publicIPAddresses'
+				  		 ,variables('publicIPAddressName'))]" 
 						}
 					 
 					 ,"subnet" : 
@@ -144,7 +147,7 @@
 			 	 "osDisk" :
 			 	 	{"name" : "[parameters('osDiskName')]"
 			 	 	 ,"vhd" : 
-			 	 	 	{"uri" :"[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('osDiskContainer'),'/',parameters('osDiskName'),'.vhd']"
+			 	 	 	{"uri" :"[concat('https://',parameters('storageAccountName'),'.blob.core.windows.net/',parameters('osDiskContainer'),'/',parameters('osDiskName'),'.vhd')]"
 			 	 	 	},
 			 	 	 "caching" : "readWrite",
 			 	 	 "createOption" :"FromImage"
@@ -162,7 +165,7 @@
 			"networkProfile" : {
 				"networkinterfaces" : 
 				[{
-					"id" : "[resourceId('Microsoft.Network/networkInterfaces', variable('networkNic'))]"
+					"id" : "[resourceId('Microsoft.Network/networkInterfaces', variables('networkNic'))]"
 				}]
 			}
 	 	
