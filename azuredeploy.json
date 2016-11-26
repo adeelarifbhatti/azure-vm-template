@@ -39,6 +39,10 @@
 	"dnsName" : {
 		"type": "string"
 	},
+	"sshPublicKey" : {
+		"type" : "string"
+	}
+
 },
 "variables" : {
 "imagepublisher" : "Canonical",
@@ -133,10 +137,19 @@
 	,"properties" :
 		{	"hardwareProfile" : {"vmSize" : "[parameters('machineSize')]"},
 			"osProfile" : {
-				"computerName" : "[parameters('machineName')]"
-				,"adminUsername" : "[parameters('adminUsername')]"
-				,"adminPassword" : "[parameters('adminPassword')]"
+				 "linuxOperatingSystemProfile": 
+				 {"adminUsername" : "[parameters('adminUsername')]"
+				,"sshProfile": 
+					{
+                    "publicKeys": 
+                    [
+                      {
+                        "certificateData": "[parameters('sshPublicKey')]"
+                      }
+                  	]
+				//,"adminPassword" : "[parameters('adminPassword')]"
 			},
+
 			"storageProfile" :
 			 	{"imageReference" :
 			 		{ "publisher" : "[variables('imagepublisher')]"
